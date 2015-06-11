@@ -123,17 +123,41 @@ var getRandomInt = function(min, max) {
 
 var startTest = function () {
   var logSize = randomLogSize();
+  var entrydata = [];
+  for (let i=0; i<logSize; i++) {
+    entrydata.push(randomString());
+  }
   var log = new Log();
-  log.create.then(function() {
+  log.create().then(function() {
     //Add entries
-    //then check entries
-    //then log (adding worked!)
-    //then edit entries to all have same data
-    //then check if it worked & log
-    //then delete entries one by one
-    //check if log is empty
+    Promise.all(entrydata.map(d => log.addEntry("text",d)).then(function(r) {
+      log.show().then(function(r) {
+        //check entries & log
+        for (let i=0; i<log.entries.length; i++) {
+          if (log.entries[i].data != entriesdata[i]) console.log("Some problem in order? Something missing?");
+        }
+      }).then(function(r) {
+        //edit entries to all have same data
+        Promise.all(log.entries.map(e => e.edit("text", "foo"))).then(function(r) {
+          log.show().then(function(r) {
+            //check if it worked & log
+            for (let i=0; i<log.entries.length; i++) {
+              if (log.entries[i].data != "foo") console.log("Somebody didn't get edited");
+            }
+          }).then(function(r) {
+            //delete entries one by one
+            Promise.all(log.entries.map(e => e.del())).then(function(r) {
+              log.show().then(function(r) {
+                //check if log is empty
+                if (log.lentries.length != 0) console.log("Something didn't get deleted");
+                else console.log("Works for log size: "+logsize);
+              });
+            });
+          });
+        });
+      });
+    });
   });
-
 }
 
 setInterval(function(){startTest()}, 1000);
