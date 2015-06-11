@@ -10,8 +10,7 @@ class API {
   }
   createLog() {
     return new Promise((resolve, reject) => {
-      request.post({url:this.url, form:{}}, (e, r, b) => {
-        console.log(b);
+      request.post({url:this.url}, function(e, r, b) {
         if (e) reject(e);
         else resolve(JSON.parse(b));
       });
@@ -188,4 +187,5 @@ var startTest = function () {
   });
 }
 
-setInterval(function(){startTest()}, 1000);
+//setInterval(function(){startTest()}, 1000);
+startTest();
