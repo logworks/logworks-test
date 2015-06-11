@@ -124,7 +124,7 @@ var getRandomInt = function(min, max) {
 var testAddEntries(log, count) {
   return new Promise((resolve, reject) => {
     var entrydata = [];
-    for (let i=0; i<logSize; i++) {
+    for (let i=0; i<count; i++) {
       entrydata.push(randomString());
     }
     //Add entries
@@ -137,7 +137,7 @@ var testAddEntries(log, count) {
             reject();
           }
         }
-        resolve();
+        resolve(log);
       });
     });
   });
@@ -155,7 +155,7 @@ var testEditEntries(log) {
             reject();
           }
         }
-        resolve();
+        resolve(log);
       });
     });
   });
@@ -182,11 +182,13 @@ var startTest = function () {
     entrydata.push(randomString());
   }
   var log = new Log();
-  log.create().then(testAddEntries).then(testEditEntries).then(testDeleteEntries).then(function() {
-    console.log("WORKS for log size: "+logsize+" (logid: "+log.id+", logurl: "+logurl+")");
-  }, function(err) {
-    console.log("FAILED for log size: "+logsize+" (logid: "+log.id+", logurl: "+logurl+")");
-  })
+  log.create().then(function() {
+    testAddEntries(log, logsize).then(testEditEntries).then(testDeleteEntries).then(function() {
+      console.log("WORKS for log size: "+logsize+" (logid: "+log.id+", logurl: "+logurl+")");
+    }, function(err) {
+      console.log("FAILED for log size: "+logsize+" (logid: "+log.id+", logurl: "+logurl+")");
+    });
+  });
 }
 
 setInterval(function(){startTest()}, 1000);
