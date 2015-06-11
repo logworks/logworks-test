@@ -179,10 +179,9 @@ var startTest = function () {
   var logsize = randomLogSize();
   var log = new Log();
   log.create().then(function() {
-    testAddEntries(log, logsize)
       //.then(testEditEntries).then(testDeleteEntries)
-    .then(function(log) {
-      console.log("WORKS for log size: "+logsize+" (logid: "+log.id+", logurl: "+logurl+")");
+    testAddEntries(log, logsize).then(function(log) {
+      console.log("WORKS for log size: "+logsize+" (logid: "+log.id+", logurl: "+log.url+")");
     }, function(err) {
       console.log("FAILED for log size: "+logsize+" (logid: "+log.id+", logurl: "+logurl+")");
     });
