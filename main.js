@@ -169,7 +169,7 @@ var testDeleteEntries = function(log) {
           console.log("Somebody didn't get deleted");
           reject();
         }
-        else resolve();
+        else resolve(log);
       });
     });
   });
@@ -179,8 +179,7 @@ var startTest = function () {
   var logsize = randomLogSize();
   var log = new Log();
   log.create().then(function() {
-      //.then(testEditEntries).then(testDeleteEntries)
-    testAddEntries(log, logsize).then(function(log) {
+    testAddEntries(log, logsize).then(testEditEntries).then(testDeleteEntries).then(function(log) {
       console.log("WORKS for log size: "+logsize+" (logid: "+log.id+", logurl: "+log.url+")");
     }, function(err) {
       console.log("FAILED for log size: "+logsize+" (logid: "+log.id+", logurl: "+logurl+")");
