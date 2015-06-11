@@ -121,7 +121,7 @@ var getRandomInt = function(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
-var testAddEntries(log, count) {
+var testAddEntries = function(log, count) {
   return new Promise((resolve, reject) => {
     var entrydata = [];
     for (let i=0; i<count; i++) {
@@ -143,7 +143,7 @@ var testAddEntries(log, count) {
   });
 }
 
-var testEditEntries(log) {
+var testEditEntries = function(log) {
   return new Promise((resolve, reject) => {
     var type = "text";
     var data = "foo";
@@ -161,7 +161,7 @@ var testEditEntries(log) {
   });
 }
 
-var testDeleteEntries(log) {
+var testDeleteEntries = function(log) {
   return new Promise((resolve, reject) => {
     Promise.all(log.entries.map(e => e.del())).then(function() {
       log.show().then(function() {
