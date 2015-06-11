@@ -82,7 +82,7 @@ class Log {
   constructor(log) {
     this.api = new API();
     this.entries = [];
-    if log {
+    if (log) {
       this.url = log.logurl;
       this.id = log.logid;
     }
