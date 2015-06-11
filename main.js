@@ -10,7 +10,8 @@ class API {
   }
   createLog() {
     return new Promise((resolve, reject) => {
-      request.post(this.url, {}, (e, r, b) => {
+      request.post({url:this.url, form:{}}, (e, r, b) => {
+        console.log(b);
         if (e) reject(e);
         else resolve(JSON.parse(b));
       });
@@ -26,7 +27,7 @@ class API {
   }
   createEntry(logid, type, data) {
     return new Promise((resolve, reject) => {
-      request.post(this.url+"/"+logid, {"type":type, "data":data}, (e, r, b) => {
+      request.post({url: this.url+"/"+logid, form: {"type":type, "data":data}}, (e, r, b) => {
         if (e) reject(e);
         else resolve(JSON.parse(b));
       });
@@ -34,7 +35,7 @@ class API {
   }
   editEntry(logid, entryid, type, data) {
    return new Promise((resolve, reject) => {
-    request.put(this.url+"/"+logid+"/"+entryid, {"type":type, "data":data}, (e, r, b) => {
+    request.put({url: this.url+"/"+logid+"/"+entryid, form: {"type":type, "data":data}}, (e, r, b) => {
       if (e) reject(e);
       else resolve(JSON.parse(b));
     });
@@ -42,7 +43,7 @@ class API {
   }
   deleteEntry(logid, entryid) {
     return new Promise((resolve, reject) => {
-      request.del(this.url+"/"+logid+"/"+entryid, {}, (e, r, b) => {
+      request.del(this.url+"/"+logid+"/"+entryid, (e, r, b) => {
         if (e) reject(e);
         else resolve(JSON.parse(b));
       });
@@ -177,10 +178,6 @@ var testDeleteEntries = function(log) {
 
 var startTest = function () {
   var logSize = randomLogSize();
-  var entrydata = [];
-  for (let i=0; i<logSize; i++) {
-    entrydata.push(randomString());
-  }
   var log = new Log();
   log.create().then(function() {
     testAddEntries(log, logsize).then(testEditEntries).then(testDeleteEntries).then(function() {
