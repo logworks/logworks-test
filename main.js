@@ -1,5 +1,3 @@
-var util = require('util');
-var EventSource = require('eventsource');
 var request = require('request');
 
 var maxLogSize = process.env.MAX_LOG_SIZE;
