@@ -187,5 +187,4 @@ var startTest = function () {
   });
 }
 
-//setInterval(function(){startTest()}, 1000);
-startTest();
+setInterval(function(){startTest();}, 1000);
