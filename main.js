@@ -128,26 +128,35 @@ var startTest = function () {
     entrydata.push(randomString());
   }
   var log = new Log();
-  log.create().then(function() {
+  log.create()
+  .then(function(r) {
     //Add entries
-    Promise.all(entrydata.map(d => log.addEntry("text",d)).then(function(r) {
-      log.show().then(function(r) {
+    Promise.all(entrydata.map(d => log.addEntry("text",d))
+    .then(function(r) {
+      log.show()
+      .then(function(r) {
         //check entries & log
         for (let i=0; i<log.entries.length; i++) {
           if (log.entries[i].data != entriesdata[i]) console.log("Some problem in order? Something missing?");
         }
-      }).then(function(r) {
+      })
+      .then(function(r) {
         //edit entries to all have same data
-        Promise.all(log.entries.map(e => e.edit("text", "foo"))).then(function(r) {
-          log.show().then(function(r) {
+        Promise.all(log.entries.map(e => e.edit("text", "foo")))
+        .then(function(r) {
+          log.show()
+          .then(function(r) {
             //check if it worked & log
             for (let i=0; i<log.entries.length; i++) {
               if (log.entries[i].data != "foo") console.log("Somebody didn't get edited");
             }
-          }).then(function(r) {
+          })
+          .then(function(r) {
             //delete entries one by one
-            Promise.all(log.entries.map(e => e.del())).then(function(r) {
-              log.show().then(function(r) {
+            Promise.all(log.entries.map(e => e.del()))
+            .then(function(r) {
+              log.show()
+              .then(function(r) {
                 //check if log is empty
                 if (log.lentries.length != 0) console.log("Something didn't get deleted");
                 else console.log("Works for log size: "+logsize);
