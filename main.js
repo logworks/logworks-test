@@ -147,7 +147,7 @@ var testEditEntries = function(log) {
   return new Promise((resolve, reject) => {
     var type = "text";
     var data = "foo";
-    Promise.all(log.entries.map(e => e.edit(type,data)).then(function() {
+    Promise.all(log.entries.map(e => e.edit(type,data))).then(function() {
       log.show().then(function() {
         for (let i=0; i<log.entries.length; i++) {
           if (log.entries[i].data != data) {
