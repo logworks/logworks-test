@@ -121,6 +121,60 @@ var getRandomInt = function(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
+var testAddEntries(log, count) {
+  return new Promise((resolve, reject) => {
+    var entrydata = [];
+    for (let i=0; i<logSize; i++) {
+      entrydata.push(randomString());
+    }
+    //Add entries
+    Promise.all(entrydata.map(d => log.addEntry("text",d)).then(function(r) {
+      log.show().then(function(r) {
+        //check entries & log
+        for (let i=0; i<log.entries.length; i++) {
+          if (log.entries[i].data != entriesdata[i]) {
+            console.log("Some problem in order? Something missing?");
+            reject();
+          }
+        }
+        resolve();
+      });
+    });
+  });
+}
+
+var testEditEntries(log) {
+  return new Promise((resolve, reject) => {
+    var type = "text";
+    var data = "foo";
+    Promise.all(log.entries.map(e => e.edit(type,data)).then(function() {
+      log.show().then(function() {
+        for (let i=0; i<log.entries.length; i++) {
+          if (log.entries[i].data != data) {
+            console.log("Somebody didn't get edited");
+            reject();
+          }
+        }
+        resolve();
+      });
+    });
+  });
+}
+
+var testDeleteEntries(log) {
+  return new Promise((resolve, reject) => {
+    Promise.all(log.entries.map(e => e.del())).then(function() {
+      log.show().then(function() {
+        if (log.entries.length != 0) {
+          console.log("Somebody didn't get deleted");
+          reject();
+        }
+        else resolve();
+      });
+    });
+  });
+}
+
 var startTest = function () {
   var logSize = randomLogSize();
   var entrydata = [];
@@ -128,45 +182,11 @@ var startTest = function () {
     entrydata.push(randomString());
   }
   var log = new Log();
-  log.create()
-  .then(function(r) {
-    //Add entries
-    Promise.all(entrydata.map(d => log.addEntry("text",d))
-    .then(function(r) {
-      log.show()
-      .then(function(r) {
-        //check entries & log
-        for (let i=0; i<log.entries.length; i++) {
-          if (log.entries[i].data != entriesdata[i]) console.log("Some problem in order? Something missing?");
-        }
-      })
-      .then(function(r) {
-        //edit entries to all have same data
-        Promise.all(log.entries.map(e => e.edit("text", "foo")))
-        .then(function(r) {
-          log.show()
-          .then(function(r) {
-            //check if it worked & log
-            for (let i=0; i<log.entries.length; i++) {
-              if (log.entries[i].data != "foo") console.log("Somebody didn't get edited");
-            }
-          })
-          .then(function(r) {
-            //delete entries one by one
-            Promise.all(log.entries.map(e => e.del()))
-            .then(function(r) {
-              log.show()
-              .then(function(r) {
-                //check if log is empty
-                if (log.lentries.length != 0) console.log("Something didn't get deleted");
-                else console.log("Works for log size: "+logsize);
-              });
-            });
-          });
-        });
-      });
-    });
-  });
+  log.create().then(testAddEntries).then(testEditEntries).then(testDeleteEntries).then(function() {
+    console.log("WORKS for log size: "+logsize+" (logid: "+log.id+", logurl: "+logurl+")");
+  }, function(err) {
+    console.log("FAILED for log size: "+logsize+" (logid: "+log.id+", logurl: "+logurl+")");
+  })
 }
 
 setInterval(function(){startTest()}, 1000);
