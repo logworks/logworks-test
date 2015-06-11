@@ -128,7 +128,7 @@ var testAddEntries = function(log, count) {
       entrydata.push(randomString());
     }
     //Add entries
-    Promise.all(entrydata.map(d => log.addEntry("text",d)).then(function(r) {
+    Promise.all(entrydata.map(d => log.addEntry("text",d))).then(function(r) {
       log.show().then(function(r) {
         //check entries & log
         for (let i=0; i<log.entries.length; i++) {
