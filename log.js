@@ -17,7 +17,7 @@ class Log {
     });
   }
   show() {
-    return this.api.showLog(this.url).then(entries => {
+    return this.api.showLog(this.id).then(entries => {
       this.entries = entries.map(e => new Entry(this.id,e));
     });
   }
