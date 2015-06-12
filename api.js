@@ -15,9 +15,9 @@ class API {
       });
     });
   }
-  showLog(logurl) {
+  showLog(logid) {
     return new Promise((resolve, reject) => {
-      request.get(this.url+"/"+logurl, (e, r, b) => {
+      request.get(this.url+"/"+logid, (e, r, b) => {
         if (e) reject(e);
         else resolve(JSON.parse(b));
       });

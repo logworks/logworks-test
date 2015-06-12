@@ -17,8 +17,8 @@ class Log {
     });
   }
   show() {
-    return this.api.showLog(this.id).then(entries => {
-      this.entries = entries.map(e => new Entry(this.id,e));
+    return this.api.showLog(this.id).then(log => {
+      this.entries = log.entries.map(e => new Entry(this.id,e));
     });
   }
   addEntry(type, data) {
