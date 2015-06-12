@@ -5,14 +5,14 @@ class Entry {
     this.api = new API();
     if (logid) this.logid = logid;
     if (entry) {
-      this.id = entry.entryid;
+      this.id = entry.id;
       this.type = entry.type;
       this.data = entry.data;
     }
   }
   create(type, data) {
     return this.api.createEntry(this.logid, type, data).then(entry => {
-      this.id = entry.entryid;
+      this.id = entry.id;
       this.type = entry.type;
       this.data = entry.data;
     });
