@@ -6,13 +6,11 @@ class Log {
     this.api = new API();
     this.entries = [];
     if (log) {
-      this.url = log.logurl;
-      this.id = log.logid;
+      this.id = log.id;
     }
   }
   create() {
     return this.api.createLog().then(log => {
-      this.url = log.url;
       this.id = log.id;
     });
   }
