@@ -12,8 +12,8 @@ class Log {
   }
   create() {
     return this.api.createLog().then(log => {
-      this.url = log.logurl;
-      this.id = log.logid;
+      this.url = log.url;
+      this.id = log.id;
     });
   }
   show() {
