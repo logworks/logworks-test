@@ -77,9 +77,9 @@ var startTest = function () {
   var log = new Log();
   log.create().then(function() {
     testAddEntries(log, logsize).then(testEditEntries).then(testDeleteEntries).then(function(log) {
-      console.log("WORKS for log size: "+logsize+" (logid: "+log.id+", logurl: "+log.url+")");
+      console.log("WORKS for log size: "+logsize+" (logid: "+log.id+")");
     }, function(err) {
-      console.log("FAILED for log size: "+logsize+" (logid: "+log.id+", logurl: "+logurl+")");
+      console.log("FAILED for log size: "+logsize+" (logid: "+log.id+")");
     });
   });
 }
