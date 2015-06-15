@@ -10,7 +10,8 @@ class API {
   createLog() {
     return new Promise((resolve, reject) => {
       request.post({url:this.url}, function(e, r, b) {
-        console.log(b);
+        console.log(e);
+        console.log(r);
         if (e) reject(e);
         else resolve(JSON.parse(b));
       });
