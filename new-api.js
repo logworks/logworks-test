@@ -1,14 +1,13 @@
 var request = require('request');
 
-module.exports = function(url) {
-  this.url = url;
+module.exports = function(apiUrl) {
   this.logs = {};
   this.entries = {};
 
   this.logs.create = function() {
-    console.log(this.url);
     return new Promise((resolve, reject) => {
-      request.post({url:this.url}, function(e, r, b) {
+      console.log(apiUrl);
+      request.post({url:apiUrl}, function(e, r, b) {
         if (e) reject(e);
         else resolve(JSON.parse(b));
       });
@@ -16,7 +15,7 @@ module.exports = function(url) {
   }
   this.logs.show = function(logid) {
     return new Promise((resolve, reject) => {
-      request.get(this.url+"/"+logid, (e, r, b) => {
+      request.get(apiUrl+"/"+logid, (e, r, b) => {
         if (e) reject(e);
         else resolve(JSON.parse(b));
       });
@@ -27,7 +26,7 @@ module.exports = function(url) {
     var type = entry.type;
     var data = entry.data;
     return new Promise((resolve, reject) => {
-      request.post({url: this.url+"/"+logid, form: {"type":type, "data":data}}, (e, r, b) => {
+      request.post({url: apiUrl+"/"+logid, form: {"type":type, "data":data}}, (e, r, b) => {
         if (e) reject(e);
         else resolve(JSON.parse(b));
       });
@@ -37,7 +36,7 @@ module.exports = function(url) {
     var type = entry.type;
     var data = entry.data;
     return new Promise((resolve, reject) => {
-      request.put({url: this.url+"/"+logid+"/"+entryid, form: {"type":type, "data":data}}, (e, r, b) => {
+      request.put({url: apiUrl+"/"+logid+"/"+entryid, form: {"type":type, "data":data}}, (e, r, b) => {
         if (e) reject(e);
         else resolve(JSON.parse(b));
       });
@@ -45,7 +44,7 @@ module.exports = function(url) {
   }
   this.entries.del = function(logid, entryid) {
     return new Promise((resolve, reject) => {
-      request.del(this.url+"/"+logid+"/"+entryid, (e, r, b) => {
+      request.del(apiUrl+"/"+logid+"/"+entryid, (e, r, b) => {
         if (e) reject(e);
         else resolve(JSON.parse(b));
       });
