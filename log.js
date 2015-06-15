@@ -1,21 +1,24 @@
-var API = require('./api');
+var API = require('./new-api');
 var Entry = require('./entry');
+
+var apiUrl = process.env.API_URL+"/v1";
+module.exports = Log;
 
 class Log {
   constructor(log) {
-    this.api = new API();
+    this.api = new API(apiUrl);
     this.entries = [];
     if (log) {
       this.id = log.id;
     }
   }
   create() {
-    return this.api.createLog().then(log => {
+    return this.api.logs.create().then(log => {
       this.id = log.id;
     });
   }
   show() {
-    return this.api.showLog(this.id).then(log => {
+    return this.api.logs.show(this.id).then(log => {
       this.entries = log.entries.map(e => new Entry(this.id,e));
     });
   }
@@ -27,4 +30,3 @@ class Log {
   }
 }
 
-module.exports = Log;

@@ -1,8 +1,10 @@
-var API = require('./api');
+var API = require('./new-api');
+var apiUrl = process.env.API_URL+"/v1";
 
+module.exports = Entry;
 class Entry {
   constructor(logid, entry) {
-    this.api = new API();
+    this.api = new API(apiUrl);
     if (logid) this.logid = logid;
     if (entry) {
       this.id = entry.id;
@@ -11,21 +13,19 @@ class Entry {
     }
   }
   create(type, data) {
-    return this.api.createEntry(this.logid, type, data).then(entry => {
+    return this.api.entries.create(this.logid, {'type':type, 'data':data}).then(entry => {
       this.id = entry.id;
       this.type = entry.type;
       this.data = entry.data;
     });
   }
   edit(type, data) {
-    return this.api.editEntry(this.logid, this.id, type, data).then(entry => {
+    return this.api.entries.edit(this.logid, this.id, {'type':type, 'data':data}).then(entry => {
       this.type = entry.type;
       this.data = entry.data;
     });
   }
   del() {
-    return this.api.deleteEntry(this.logid, this.id)
+    return this.api.entries.del(this.logid, this.id)
   }
 }
-
-module.exports = Entry;
