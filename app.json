@@ -4,7 +4,7 @@
   "repository": "https://github.com/arpith/logworks-test",
   "keywords": ["node", "logworks", "api", "test"],
   "env": {
-    "API_URL": "https://logworksapi.heroku.com",
+    "API_URL": "https://logworksapi.herokuapp.com",
     "MAX_LOG_SIZE": {"description": "Maximum size of log", "value":"10"}
   }
 }
