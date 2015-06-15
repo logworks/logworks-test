@@ -2,6 +2,7 @@ var Entry = require('./entry');
 var Log = require('./log');
 
 var maxLogSize = process.env.MAX_LOG_SIZE;
+console.log(maxLogSize);
 
 var randomString = function() {
   var crypto = require('crypto')
