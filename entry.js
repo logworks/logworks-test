@@ -1,4 +1,4 @@
-var API = require('./new-api');
+var API = require('logworks');
 var apiUrl = process.env.API_URL+"/v1";
 
 class Entry {
