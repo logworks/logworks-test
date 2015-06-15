@@ -6,7 +6,6 @@ module.exports = function(apiUrl) {
 
   this.logs.create = function() {
     return new Promise((resolve, reject) => {
-      console.log(apiUrl);
       request.post({url:apiUrl}, function(e, r, b) {
         if (e) reject(e);
         else resolve(JSON.parse(b));
