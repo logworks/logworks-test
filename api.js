@@ -6,6 +6,7 @@ var apiUrl = process.env.API_URL+"/v1";
 class API {
   constructor() {
     this.url = apiUrl;
+    console.log(this.url);
   }
   createLog() {
     return new Promise((resolve, reject) => {
