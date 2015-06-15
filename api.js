@@ -6,11 +6,11 @@ var apiUrl = process.env.API_URL+"/v1";
 class API {
   constructor() {
     this.url = apiUrl;
-    console.log(this.url);
   }
   createLog() {
     return new Promise((resolve, reject) => {
       request.post({url:this.url}, function(e, r, b) {
+        console.log(b);
         if (e) reject(e);
         else resolve(JSON.parse(b));
       });
