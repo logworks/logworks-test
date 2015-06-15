@@ -1,7 +1,6 @@
 var API = require('./new-api');
 var apiUrl = process.env.API_URL+"/v1";
 
-module.exports = Entry;
 class Entry {
   constructor(logid, entry) {
     this.api = new API(apiUrl);
@@ -29,3 +28,5 @@ class Entry {
     return this.api.entries.del(this.logid, this.id)
   }
 }
+
+module.exports = Entry;

@@ -2,7 +2,6 @@ var API = require('./new-api');
 var Entry = require('./entry');
 
 var apiUrl = process.env.API_URL+"/v1";
-module.exports = Log;
 
 class Log {
   constructor(log) {
@@ -30,3 +29,4 @@ class Log {
   }
 }
 
+module.exports = Log;
