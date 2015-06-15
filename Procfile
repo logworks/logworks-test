@@ -1,1 +1,1 @@
-worker: npm start logworks-test
+worker: npm start
