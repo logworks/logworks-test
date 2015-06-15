@@ -1,5 +1,4 @@
 var request = require('request');
-module.exports = API;
 
 var API = function(url) {
   this.url = url;
@@ -51,3 +50,4 @@ API.entries.del = function(logid, entryid) {
   });
 }
 
+module.exports = API;
