@@ -4,7 +4,7 @@
   "description": "Simple app to test the Logworks API",
   "main": "main.js",
   "dependencies": {
-    "logworks": "*",
+    "logworks": "^1.0.1",
     "request": "*",
     "babel": "^5.4.7"
   },
