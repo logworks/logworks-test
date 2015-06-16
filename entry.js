@@ -18,6 +18,7 @@ class Entry {
       this.id = entry.id;
       this.type = entry.type;
       this.data = entry.data;
+			return entry;
     });
   }
   edit(type, data) {

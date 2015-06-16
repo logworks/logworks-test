@@ -25,7 +25,7 @@ class Log {
   addEntry(type, data) {
     var entry = new Entry(this.id);
     return entry.create(type, data).then(entry => {
-      this.entries.push(new Entry(this.id, entry.toJS()));
+      this.entries.push(new Entry(this.id, entry));
     });
   }
 }
