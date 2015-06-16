@@ -1,4 +1,6 @@
-var LogWorks = require('logworks')(process.env.API_URL);
+var API = require('logworks');
+var apiUrl = process.env.API_URL+"/v1";
+var LogWorks = new API(apiUrl);
 var maxLogSize = process.env.MAX_LOG_SIZE;
 
 var randomString = function() {
@@ -23,7 +25,7 @@ var testAddEntries = function(log, count) {
       entrydata.push(randomString());
     }
     //Add entries
-    Promise.all(entrydata.map(d => LogWorks.entries.create(log.get('id'),"text",d))).then(function(r) {
+    Promise.all(entrydata.map(d => LogWorks.entries.create(log.get('id'),{type:"text", data:d}))).then(function(r) {
       LogWorks.logs.show(log.get(id)).then(function(log) {
         //check entries & log
 				log.get('entries').forEach(function(entry) {
