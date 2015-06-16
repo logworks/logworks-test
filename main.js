@@ -42,12 +42,10 @@ var testAddEntries = function(log, count) {
 
 var testEditEntries = function(log) {
   return new Promise((resolve, reject) => {
-    var type = "text";
-    var data = "foo";
-    Promise.all(log.get('entries').map(e => LogWorks.entries.edit(log.get('id'),type,data))).then(function() {
+    Promise.all(log.get('entries').map(e => LogWorks.entries.edit(log.get('id'),e.get('id'),{type:"text", data:"foo"}))).then(function() {
       LogWorks.logs.show(log.get('id')).then(function(log) {
 				log.get('entries').forEach(function(entry) {
-          if (entry.get('data') != data) {
+          if (entry.get('data') != "foo") {
             console.log("Somebody didn't get edited");
             reject();
           }
