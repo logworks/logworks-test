@@ -26,7 +26,7 @@ var testAddEntries = function(log, count) {
     }
     //Add entries
     Promise.all(entrydata.map(d => LogWorks.entries.create(log.get('id'),{type:"text", data:d}))).then(function(r) {
-      LogWorks.logs.show(log.get(id)).then(function(log) {
+      LogWorks.logs.show(log.get('id')).then(function(log) {
         //check entries & log
 				log.get('entries').forEach(function(entry) {
           if (entrydata.indexOf(entry.get('data')) == -1) {
