@@ -1,5 +1,6 @@
 var API = require('logworks');
 var apiUrl = process.env.API_URL+"/v1";
+var Immutable = require('immutable');
 
 class Entry {
   constructor(logid, entry) {
@@ -13,6 +14,7 @@ class Entry {
   }
   create(type, data) {
     return this.api.entries.create(this.logid, {'type':type, 'data':data}).then(entry => {
+      entry = entry.toJS();
       this.id = entry.id;
       this.type = entry.type;
       this.data = entry.data;
@@ -20,6 +22,7 @@ class Entry {
   }
   edit(type, data) {
     return this.api.entries.edit(this.logid, this.id, {'type':type, 'data':data}).then(entry => {
+      entry = entry.toJS();
       this.type = entry.type;
       this.data = entry.data;
     });
