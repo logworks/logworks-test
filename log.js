@@ -26,6 +26,7 @@ class Log {
     var entry = new Entry(this.id);
     return entry.create(type, data).then(entry => {
       this.entries.push(new Entry(this.id, entry));
+			return entry;
     });
   }
 }

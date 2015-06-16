@@ -1,4 +1,6 @@
-var LogWorks = require('logworks')(process.env.API_URL);
+var Entry = require('./entry');
+var Log = require('./log');
+
 var maxLogSize = process.env.MAX_LOG_SIZE;
 
 var randomString = function() {
@@ -23,16 +25,16 @@ var testAddEntries = function(log, count) {
       entrydata.push(randomString());
     }
     //Add entries
-    Promise.all(entrydata.map(d => LogWorks.entries.create(log.get('id'),"text",d))).then(function(r) {
-      LogWorks.logs.show(log.get(id)).then(function(log) {
+    Promise.all(entrydata.map(d => log.addEntry("text",d))).then(function(r) {
+      log.show().then(function(r) {
         //check entries & log
-				log.get('entries').forEach(function(entry) {
-          if (entrydata.indexOf(entry.get('data')) == -1) {
+        for (let i=0; i<log.entries.length; i++) {
+          if (entrydata.indexOf(log.entries[i].data) == -1) {
             console.log("Something missing?");
             reject();
-					}
-				});
-				resolve(log);
+          }
+        }
+        resolve(log);
       });
     });
   });
@@ -42,14 +44,14 @@ var testEditEntries = function(log) {
   return new Promise((resolve, reject) => {
     var type = "text";
     var data = "foo";
-    Promise.all(log.get('entries').map(e => LogWorks.entries.edit(log.get('id'),type,data))).then(function() {
-      LogWorks.logs.show(log.get('id')).then(function(log) {
-				log.get('entries').forEach(function(entry) {
-          if (entry.get('data') != data) {
+    Promise.all(log.entries.map(e => e.edit(type,data))).then(function() {
+      log.show().then(function() {
+        for (let i=0; i<log.entries.length; i++) {
+          if (log.entries[i].data != data) {
             console.log("Somebody didn't get edited");
             reject();
           }
-        });
+        }
         resolve(log);
       });
     });
@@ -58,9 +60,9 @@ var testEditEntries = function(log) {
 
 var testDeleteEntries = function(log) {
   return new Promise((resolve, reject) => {
-    Promise.all(log.get('entries').map(e => LogWorks.entries.del(log.get('id'),e.get('id')))).then(function() {
-      LogWorks.logs.show(log.get('id')).then(function(log) {
-        if (log.get('entries').size != 0) {
+    Promise.all(log.entries.map(e => e.del())).then(function() {
+      log.show().then(function() {
+        if (log.entries.length != 0) {
           console.log("Somebody didn't get deleted");
           reject();
         }
@@ -72,11 +74,12 @@ var testDeleteEntries = function(log) {
 
 var startTest = function () {
   var logsize = randomLogSize();
-	LogWorks.logs.create().then(function(log) {
+  var log = new Log();
+  log.create().then(function() {
     testAddEntries(log, logsize).then(testEditEntries).then(testDeleteEntries).then(function(log) {
-      console.log("WORKS for log size: "+logsize+" (logid: "+log.get('id')+")");
+      console.log("WORKS for log size: "+logsize+" (logid: "+log.id+")");
     }, function(err) {
-      console.log("FAILED for log size: "+logsize+" (logid: "+log.get('id')+")");
+      console.log("FAILED for log size: "+logsize+" (logid: "+log.id+")");
     });
   });
 }
