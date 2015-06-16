@@ -14,12 +14,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/arpith/logworks-test"
+    "url": "https://github.com/logworks/logworks-test"
   },
   "author": "Arpith Siromoney",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/arpith/logworks-test/issues"
+    "url": "https://github.com/logworks/logworks-test/issues"
   },
-  "homepage": "https://github.com/arpith/logworks-test"
+  "homepage": "https://github.com/logworks/logworks-test"
 }
