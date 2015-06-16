@@ -6,7 +6,7 @@ Node app to test logworks api
 
 Or:
 
-1. `$ git clone github.com/arpith/logworks-test`
+1. `$ git clone github.com/logworks/logworks-test`
 2. `$ cd logworks-test`
 3. `$ npm install .`
 
