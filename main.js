@@ -28,13 +28,13 @@ var testAddEntries = function(log, count) {
     Promise.all(entrydata.map(d => LogWorks.entries.create(log.get('id'),{type:"text", data:d}))).then(function(r) {
       LogWorks.logs.show(log.get('id')).then(function(log) {
         //check entries & log
-				log.get('entries').forEach(function(entry) {
+        log.get('entries').forEach(function(entry) {
           if (entrydata.indexOf(entry.get('data')) == -1) {
             console.log("Something missing?");
             reject();
-					}
-				});
-				resolve(log);
+          }
+        });
+        resolve(log);
       });
     });
   });
@@ -44,7 +44,7 @@ var testEditEntries = function(log) {
   return new Promise((resolve, reject) => {
     Promise.all(log.get('entries').map(e => LogWorks.entries.edit(log.get('id'),e.get('id'),{type:"text", data:"foo"}))).then(function() {
       LogWorks.logs.show(log.get('id')).then(function(log) {
-				log.get('entries').forEach(function(entry) {
+        log.get('entries').forEach(function(entry) {
           if (entry.get('data') != "foo") {
             console.log("Somebody didn't get edited");
             reject();
@@ -72,7 +72,7 @@ var testDeleteEntries = function(log) {
 
 var startTest = function () {
   var logsize = randomLogSize();
-	LogWorks.logs.create().then(function(log) {
+  LogWorks.logs.create().then(function(log) {
     testAddEntries(log, logsize).then(testEditEntries).then(testDeleteEntries).then(function(log) {
       console.log("WORKS for log size: "+logsize+" (logid: "+log.get('id')+")");
     }, function(err) {
