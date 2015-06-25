@@ -29,6 +29,7 @@ var testAddEntries = function(log, count) {
       LogWorks.logs.show(log.get('id')).then(function(log) {
         //check entries & log
         log.get('entries').forEach(function(entry) {
+          console.log(entry);
           if (entrydata.indexOf(entry.get('data')) == -1) {
             console.log("Something missing?");
             reject();
@@ -81,4 +82,5 @@ var startTest = function () {
   });
 }
 
-setInterval(function(){startTest();}, 1000);
+//setInterval(function(){startTest();}, 1000);
+startTest();
