@@ -1,12 +1,12 @@
 {
   "name": "logworks-test",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Simple app to test the Logworks API",
   "main": "main.js",
   "dependencies": {
     "babel": "^5.4.7",
     "immutable": "^3.7.3",
-    "logworks": "^3.0.11"
+    "logworks": "^3.0.12"
   },
   "scripts": {
     "start": "./node_modules/.bin/babel-node ./main.js",

@@ -19,6 +19,24 @@ var getRandomInt = function(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
+var testEditLog = function(log) {
+  return new Promise((resolve, reject) => {
+    var data = log.get('data').toJS();
+    data.title = randomString();
+    data.description = randomString();
+    LogWorks.logs.edit(log.get('id'),data).then(function(r) {
+      LogWorks.logs.show(log.get('url')).then(function(updatedLog) {
+        var updatedData = updatedLog.get('data').toJS();
+        if ((updatedData.title !== data.title) || (updatedData.description !== data.description)) {
+          console.log("Title or description wasn't updated");
+          reject();
+        }
+        resolve(log);
+      });
+    });
+  });
+}
+
 var testAddEntries = function(log, count) {
   return new Promise((resolve, reject) => {
     var entrydata = [];
@@ -73,7 +91,7 @@ var testDeleteEntries = function(log) {
 
 var startTest = function () {
   var logsize = randomLogSize();
-  LogWorks.logs.create().then(function(log) {
+  LogWorks.logs.create().then(testEditLog).then(function(log) {
     testAddEntries(log, logsize).then(testEditEntries).then(testDeleteEntries).then(function(log) {
       console.log("WORKS for log size: "+logsize+" (logid: "+log.get('id')+")");
     }, function(err) {
