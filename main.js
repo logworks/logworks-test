@@ -1,7 +1,8 @@
 var API = require('logworks');
-var apiUrl = process.env.API_URL+"/v1";
+var baseApiUrl = process.env.API_URL || "https://logworksapi.herokuapp.com";
+var apiUrl = baseApiUrl + "/v1";
 var LogWorks = new API(apiUrl);
-var maxLogSize = process.env.MAX_LOG_SIZE;
+var maxLogSize = process.env.MAX_LOG_SIZE || 10;
 
 var randomString = function() {
   var crypto = require('crypto')
