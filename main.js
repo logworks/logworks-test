@@ -26,7 +26,7 @@ var testAddEntries = function(log, count) {
     }
     //Add entries
     Promise.all(entrydata.map(d => LogWorks.entries.create(log.get('id'),{type:"text", data:d}))).then(function(r) {
-      LogWorks.logs.show(log.get('id')).then(function(log) {
+      LogWorks.logs.show(log.get('url')).then(function(log) {
         //check entries & log
         log.get('entries').forEach(function(entry) {
           if (entrydata.indexOf(entry.get('data')) == -1) {
@@ -43,7 +43,7 @@ var testAddEntries = function(log, count) {
 var testEditEntries = function(log) {
   return new Promise((resolve, reject) => {
     Promise.all(log.get('entries').map(e => LogWorks.entries.edit(log.get('id'),e.get('id'),{type:"text", data:"foo"}))).then(function() {
-      LogWorks.logs.show(log.get('id')).then(function(log) {
+      LogWorks.logs.show(log.get('url')).then(function(log) {
         log.get('entries').forEach(function(entry) {
           if (entry.get('data') != "foo") {
             console.log("Somebody didn't get edited");
@@ -59,7 +59,7 @@ var testEditEntries = function(log) {
 var testDeleteEntries = function(log) {
   return new Promise((resolve, reject) => {
     Promise.all(log.get('entries').map(e => LogWorks.entries.del(log.get('id'),e.get('id')))).then(function() {
-      LogWorks.logs.show(log.get('id')).then(function(log) {
+      LogWorks.logs.show(log.get('url')).then(function(log) {
         if (log.get('entries').size != 0) {
           console.log("Somebody didn't get deleted");
           reject();
