@@ -1,6 +1,6 @@
 {
   "name": "logworks-test",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Simple app to test the Logworks API",
   "main": "main.js",
   "dependencies": {
