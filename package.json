@@ -6,7 +6,7 @@
   "dependencies": {
     "babel": "^5.4.7",
     "immutable": "^3.7.3",
-    "logworks": "^3.0.12"
+    "logworks": "^3.0.13"
   },
   "scripts": {
     "start": "./node_modules/.bin/babel-node ./main.js",

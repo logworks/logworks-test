@@ -89,10 +89,24 @@ var testDeleteEntries = function(log) {
   });
 }
 
+var testDeleteLog = function(log) {
+  return new Promise((resolve, reject) => {
+    LogWorks.logs.del(log.get('id')).then(function() {
+      LogWorks.logs.show(log.get('url')).then(function(log) {
+        console.log("Log didn't get deleted");
+        reject();
+      }, function(err) {
+        resolve(log);
+      });
+    });
+  });
+}
+
+
 var startTest = function () {
   var logsize = randomLogSize();
   LogWorks.logs.create().then(testEditLog).then(function(log) {
-    testAddEntries(log, logsize).then(testEditEntries).then(testDeleteEntries).then(function(log) {
+    testAddEntries(log, logsize).then(testEditEntries).then(testDeleteEntries).then(testDeleteLog).then(function(log) {
       console.log("WORKS for log size: "+logsize+" (logid: "+log.get('id')+")");
     }, function(err) {
       console.log("FAILED for log size: "+logsize+" (logid: "+log.get('id')+")");
