@@ -19,6 +19,22 @@ var getRandomInt = function(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
+var testCreateLog = function() {
+  return new Promise((resolve, reject) => {
+    var data = {};
+    data.title = randomString();
+    data.description = randomString();
+    LogWorks.logs.create(data).then(function(log) {
+      var savedData = log.get('data').toJS();
+      if ((data.title !== savedData.title) || (savedData.description !== data.description)) {
+        console.log("Title or description wasn't saved");
+        reject();
+      }
+      resolve(log);
+    });
+  });
+}
+
 var testEditLog = function(log) {
   return new Promise((resolve, reject) => {
     var data = log.get('data').toJS();
@@ -102,10 +118,9 @@ var testDeleteLog = function(log) {
   });
 }
 
-
 var startTest = function () {
   var logsize = randomLogSize();
-  LogWorks.logs.create().then(testEditLog).then(function(log) {
+  testCreateLog().then(testEditLog).then(function(log) {
     testAddEntries(log, logsize).then(testEditEntries).then(testDeleteEntries).then(testDeleteLog).then(function(log) {
       console.log("WORKS for log size: "+logsize+" (logid: "+log.get('id')+")");
     }, function(err) {
