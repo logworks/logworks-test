@@ -6,7 +6,7 @@
   "dependencies": {
     "babel": "^5.4.7",
     "immutable": "^3.7.3",
-    "logworks": "^3.0.14",
+    "logworks": "^3.0.17",
     "lorem-ipsum": "^1.0.3"
   },
   "scripts": {
