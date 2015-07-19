@@ -77,7 +77,12 @@ var testAddEntries = function(log, count) {
 
 var testEditEntries = function(log) {
   return new Promise((resolve, reject) => {
-    Promise.all(log.get('entries').map(e => LogWorks.entries.edit(log.get('id'),e.get('id'),{type:"text", data:"foo"}))).then(function() {
+    Promise.all(log.get('entries').map(e => {
+      var entry = e.toJS();
+      entry.type = "text";
+      entry.data = "foo";
+      return LogWorks.entries.edit(log.get('id'), entry);
+    })).then(function() {
       LogWorks.logs.show(log.get('url')).then(function(log) {
         log.get('entries').forEach(function(entry) {
           if (entry.get('data') != "foo") {
@@ -93,7 +98,7 @@ var testEditEntries = function(log) {
 
 var testDeleteEntries = function(log) {
   return new Promise((resolve, reject) => {
-    Promise.all(log.get('entries').map(e => LogWorks.entries.del(log.get('id'),e.get('id')))).then(function() {
+    Promise.all(log.get('entries').map(e => LogWorks.entries.del(log.get('id'),e.toJS()))).then(function() {
       LogWorks.logs.show(log.get('url')).then(function(log) {
         if (log.get('entries').size != 0) {
           console.log("Somebody didn't get deleted");
