@@ -40,8 +40,12 @@ var testEditLog = function(log) {
     var data = log.get('data').toJS();
     data.title = randomString();
     data.description = randomString();
+    console.log(data);
+    console.log(log);
     LogWorks.logs.edit(log.get('id'),data).then(function(r) {
+      console.log(r);
       LogWorks.logs.show(log.get('url')).then(function(updatedLog) {
+        console.log(updatedLog);
         var updatedData = updatedLog.get('data').toJS();
         if ((updatedData.title !== data.title) || (updatedData.description !== data.description)) {
           console.log("Title or description wasn't updated");
@@ -59,9 +63,11 @@ var testAddEntries = function(log, count) {
     for (let i=0; i<count; i++) {
       entrydata.push(randomString());
     }
+    console.log(data);
     //Add entries
     Promise.all(entrydata.map(d => LogWorks.entries.create(log.get('id'),{type:"text", data:d}))).then(function(r) {
       LogWorks.logs.show(log.get('url')).then(function(log) {
+        console.log(log);
         //check entries & log
         log.get('entries').forEach(function(entry) {
           if (entrydata.indexOf(entry.get('data')) == -1) {
@@ -98,7 +104,7 @@ var testEditEntries = function(log) {
 
 var testDeleteEntries = function(log) {
   return new Promise((resolve, reject) => {
-    Promise.all(log.get('entries').map(e => LogWorks.entries.del(log.get('id'),e.toJS()))).then(function() {
+    Promise.all(log.get('entries').map(e => LogWorks.entries.del(log.get('id'),e.get('id')))).then(function() {
       LogWorks.logs.show(log.get('url')).then(function(log) {
         if (log.get('entries').size != 0) {
           console.log("Somebody didn't get deleted");
@@ -133,5 +139,5 @@ var startTest = function () {
     });
   });
 }
-
-setInterval(function(){startTest();}, 1000);
+startTest();
+//setInterval(function(){startTest();}, 1000);
