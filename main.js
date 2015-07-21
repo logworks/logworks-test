@@ -42,18 +42,12 @@ var testEditLog = function(log) {
     data.description = randomString();
     LogWorks.logs.edit(log.get('id'),data).then(function(r) {
       LogWorks.logs.show(log.get('url')).then(function(updatedLog) {
-        if (!updatedLog.get('data')) {
-          console.log(r);
-          console.log(updatedLog);
+        var updatedData = updatedLog.get('data').toJS();
+        if ((updatedData.title !== data.title) || (updatedData.description !== data.description)) {
+          console.log("Title or description wasn't updated");
           reject();
-        } else {
-          var updatedData = updatedLog.get('data').toJS();
-          if ((updatedData.title !== data.title) || (updatedData.description !== data.description)) {
-            console.log("Title or description wasn't updated");
-            reject();
-          }
-          resolve(log);
         }
+        resolve(log);
       });
     });
   });
@@ -65,20 +59,23 @@ var testAddEntries = function(log, count) {
     for (let i=0; i<count; i++) {
       entrydata.push(randomString());
     }
-    console.log(data);
     //Add entries
-    Promise.all(entrydata.map(d => LogWorks.entries.create(log.get('id'),{type:"text", data:d}))).then(function(r) {
-      LogWorks.logs.show(log.get('url')).then(function(log) {
-        console.log(log);
+    var promiseArr = entrydata.map(d => LogWorks.entries.create(log.get('id'),{type:"text", data:d}));
+    Promise.all(promiseArr).then(res => {
+      return LogWorks.logs.show(log.get('url'));
+    }).then(log => {
         //check entries & log
-        log.get('entries').forEach(function(entry) {
+      var promiseArr = log.get('entries').map(entryid => {
+        return LogWorks.entries.show(log.get('id'), entryid).then(entry => {
           if (entrydata.indexOf(entry.get('data')) == -1) {
             console.log("Something missing?");
             reject();
           }
         });
-        resolve(log);
-      });
+      })
+      return Promise.all(promiseArr);
+    }).then(res => {
+      resolve(log);
     });
   });
 }
@@ -133,15 +130,13 @@ var testDeleteLog = function(log) {
 
 var startTest = function () {
   var logsize = randomLogSize();
-  testCreateLog().then(testEditLog)
-   // .then(function(log) {
-   // testAddEntries(log, logsize).then(testEditEntries).then(testDeleteEntries).then(testDeleteLog)
-   .then(function(log) {
+  testCreateLog().then(testEditLog).then(function(log) {
+    testAddEntries(log, logsize).then(testEditEntries).then(testDeleteEntries).then(testDeleteLog).then(function(log) {
       console.log("WORKS for log size: "+logsize+" (logid: "+log.get('id')+")");
     }, function(err) {
       console.log("FAILED for log size: "+logsize+" (logid: "+log.get('id')+")");
     });
-  //});
+  });
 }
-//startTest();
-setInterval(function(){startTest();}, 5000);
+
+setInterval(function(){startTest();}, 1000);
