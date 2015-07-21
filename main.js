@@ -40,18 +40,20 @@ var testEditLog = function(log) {
     var data = log.get('data').toJS();
     data.title = randomString();
     data.description = randomString();
-    console.log(data);
-    console.log(log);
     LogWorks.logs.edit(log.get('id'),data).then(function(r) {
-      console.log(r);
       LogWorks.logs.show(log.get('url')).then(function(updatedLog) {
-        console.log(updatedLog);
-        var updatedData = updatedLog.get('data').toJS();
-        if ((updatedData.title !== data.title) || (updatedData.description !== data.description)) {
-          console.log("Title or description wasn't updated");
+        if (!updatedLog.get('data')) {
+          console.log(r);
+          console.log(updatedLog);
           reject();
+        } else {
+          var updatedData = updatedLog.get('data').toJS();
+          if ((updatedData.title !== data.title) || (updatedData.description !== data.description)) {
+            console.log("Title or description wasn't updated");
+            reject();
+          }
+          resolve(log);
         }
-        resolve(log);
       });
     });
   });
@@ -87,7 +89,7 @@ var testEditEntries = function(log) {
       var entry = e.toJS();
       entry.type = "text";
       entry.data = "foo";
-      return LogWorks.entries.edit(log.get('id'), entry);
+      return LogWorks.entries.edit(log.get('id'), entry.id, entry);
     })).then(function() {
       LogWorks.logs.show(log.get('url')).then(function(log) {
         log.get('entries').forEach(function(entry) {
@@ -131,13 +133,15 @@ var testDeleteLog = function(log) {
 
 var startTest = function () {
   var logsize = randomLogSize();
-  testCreateLog().then(testEditLog).then(function(log) {
-    testAddEntries(log, logsize).then(testEditEntries).then(testDeleteEntries).then(testDeleteLog).then(function(log) {
+  testCreateLog().then(testEditLog)
+   // .then(function(log) {
+   // testAddEntries(log, logsize).then(testEditEntries).then(testDeleteEntries).then(testDeleteLog)
+   .then(function(log) {
       console.log("WORKS for log size: "+logsize+" (logid: "+log.get('id')+")");
     }, function(err) {
       console.log("FAILED for log size: "+logsize+" (logid: "+log.get('id')+")");
     });
-  });
+  //});
 }
-startTest();
-//setInterval(function(){startTest();}, 1000);
+//startTest();
+setInterval(function(){startTest();}, 5000);
