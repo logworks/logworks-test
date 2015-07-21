@@ -59,12 +59,10 @@ var testAddEntries = function(log, count) {
     for (let i=0; i<count; i++) {
       entrydata.push(randomString());
     }
-    //Add entries
     var promiseArr = entrydata.map(d => LogWorks.entries.create(log.get('id'),{type:"text", data:d}));
     Promise.all(promiseArr).then(res => {
       return LogWorks.logs.show(log.get('url'));
     }).then(log => {
-        //check entries & log
       var promiseArr = log.get('entries').map(entryid => {
         return LogWorks.entries.show(log.get('id'), entryid).then(entry => {
           if (entrydata.indexOf(entry.get('data')) == -1) {
@@ -104,41 +102,41 @@ var testEditEntries = function(log) {
 
 var testDeleteEntries = function(log) {
   return new Promise((resolve, reject) => {
-    Promise.all(log.get('entries').map(e => LogWorks.entries.del(log.get('id'),e.get('id')))).then(function() {
-      LogWorks.logs.show(log.get('url')).then(function(log) {
-        if (log.get('entries').size != 0) {
-          console.log("Somebody didn't get deleted");
-          reject();
-        }
-        else resolve(log);
-      });
+    var promiseArr = log.get('entries').map(entryid => LogWorks.entries.del(log.get('id'), entryid));
+    Promise.all(promiseArr).then(res => {
+      return LogWorks.logs.show(log.get('url'));
+    }).then(log => {
+      if (log.get('entries').size != 0) {
+        console.log("Somebody didn't get deleted");
+        reject();
+      }
+      else resolve(log);
     });
   });
 }
 
 var testDeleteLog = function(log) {
   return new Promise((resolve, reject) => {
-    LogWorks.logs.del(log.get('id')).then(function() {
-      LogWorks.logs.show(log.get('url')).then(function(log) {
-        console.log("Log didn't get deleted");
-        reject();
-      }, function(err) {
-        resolve(log);
-      });
+    LogWorks.logs.del(log.get('id')).then(res => {
+      return LogWorks.logs.show(log.get('url'));
+    }).then(log => {
+      console.log(log);
+      console.log("Log didn't get deleted");
+      reject();
+    }).catch(err => {
+      resolve(log);
     });
   });
 }
 
 var startTest = function () {
   var logsize = randomLogSize();
-  testCreateLog().then(testEditLog).then(function(log) {
-    testAddEntries(log, logsize).then(testEditEntries)
-      //.then(testDeleteEntries).then(testDeleteLog)
-    .then(function(log) {
-      console.log("WORKS for log size: "+logsize+" (logid: "+log.get('id')+")");
-    }, function(err) {
-      console.log("FAILED for log size: "+logsize+" (logid: "+log.get('id')+")");
-    });
+  testCreateLog().then(testEditLog).then(log => {
+    return testAddEntries(log, logsize);
+  }).then(testEditEntries).then(testDeleteEntries).then(testDeleteLog).then(log => {
+    console.log("WORKS for log size: "+logsize+" (logid: "+log.get('id')+")");
+  }).catch(err => {
+    console.log("FAILED for log size: "+logsize+" (logid: "+log.get('id')+")");
   });
 }
 
