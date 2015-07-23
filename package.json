@@ -1,12 +1,12 @@
 {
   "name": "logworks-test",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "description": "Simple app to test the Logworks API",
   "main": "main.js",
   "dependencies": {
     "babel": "^5.4.7",
     "immutable": "^3.7.3",
-    "logworks": "^3.0.21",
+    "logworks": "^3.0.22",
     "lorem-ipsum": "^1.0.3"
   },
   "scripts": {
