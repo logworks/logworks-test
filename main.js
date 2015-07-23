@@ -1,5 +1,5 @@
 var API = require('logworks');
-var baseApiUrl = process.env.API_URL || "https://logworksapi.herokuapp.com";
+var baseApiUrl = process.env.API_URL || "https://2p0tufq4kg.execute-api.us-east-1.amazonaws.com";
 var apiUrl = baseApiUrl + "/v1";
 var LogWorks = new API(apiUrl);
 var maxLogSize = process.env.MAX_LOG_SIZE || 10;
