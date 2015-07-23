@@ -1,7 +1,7 @@
 var loremIpsum = require('lorem-ipsum')
 var API = require('logworks');
-var logID = process.env.LOG_ID || "tRRN0f7jtJlC";
-var baseApiUrl = process.env.API_URL || "https://logworksapi.herokuapp.com";
+var logID = process.env.LOG_ID || "EN52um_a856_l-aiFNoBYJxlKEE";
+var baseApiUrl = process.env.API_URL || "https://2p0tufq4kg.execute-api.us-east-1.amazonaws.com";
 var apiUrl = baseApiUrl + "/v1";
 var LogWorks = new API(apiUrl);
 var maxLogSize = process.env.MAX_LOG_SIZE || 10;
