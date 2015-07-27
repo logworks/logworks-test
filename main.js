@@ -53,6 +53,18 @@ var testEditLog = function(log) {
   });
 }
 
+var testGenerateSignedURL = function(log) {
+  return new Promise((resolve, reject) => {
+    return LogWorks.logs.generateSignedURL(log.get('id')).then(res => {
+      if (res.get('success') === 'true' && res.get('url')) resolve(log);
+      else {
+        console.log("Couldn't generate signed url");
+        reject();
+      }
+    });
+  });
+}
+
 var testAddEntries = function(log, count) {
   return new Promise((resolve, reject) => {
     var entrydata = [];
@@ -131,7 +143,7 @@ var testDeleteLog = function(log) {
 
 var startTest = function () {
   var logsize = randomLogSize();
-  testCreateLog().then(testEditLog).then(log => {
+  testCreateLog().then(testEditLog).then(testGenerateSignedURL).then(log => {
     return testAddEntries(log, logsize);
   }).then(testEditEntries).then(testDeleteEntries).then(testDeleteLog).then(log => {
     console.log("WORKS for log size: "+logsize+" (logid: "+log.get('id')+")");
