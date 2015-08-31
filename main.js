@@ -1,7 +1,9 @@
+var fetch = require('node-fetch');
+var Promise = require('bluebird');
 var API = require('logworks');
 var baseApiUrl = process.env.API_URL || "https://2p0tufq4kg.execute-api.us-east-1.amazonaws.com";
 var apiUrl = baseApiUrl + "/v1";
-var LogWorks = new API(apiUrl);
+var LogWorks = new API(apiUrl, fetch, Promise);
 var maxLogSize = process.env.MAX_LOG_SIZE || 10;
 
 var randomString = function() {
@@ -75,17 +77,16 @@ var testAddEntries = function(log, count) {
     Promise.all(promiseArr).then(res => {
       return LogWorks.logs.show(log.get('url'));
     }).then(log => {
-      var promiseArr = log.get('entries').map(entryid => {
-        return LogWorks.entries.show(log.get('id'), entryid).then(entry => {
-          if (entrydata.indexOf(entry.get('data')) == -1) {
-            console.log("Something missing?");
-            reject();
-          }
-        });
-      })
+      var promiseArr = log.toJS().entries.map(entryid => LogWorks.entries.show(log.get('id'), entryid));
       return Promise.all(promiseArr).then(res => {
-        resolve(log);
-      });
+				res.forEach(entry => {
+					if (entrydata.indexOf(entry.get('data')) === -1) {
+						console.log("Something missing?");
+						reject();
+					}
+				});
+				resolve(log);
+			});
     });
   });
 }
@@ -93,11 +94,11 @@ var testAddEntries = function(log, count) {
 var testEditEntries = function(log) {
   return new Promise((resolve, reject) => {
     var logid = log.get('id');
-    var promiseArr = log.get('entries').map(entryid => LogWorks.entries.edit(logid, entryid, {type: 'text', data: 'foo'}));
+    var promiseArr = log.toJS().entries.map(entryid => LogWorks.entries.edit(logid, entryid, {type: 'text', data: 'foo'}));
     Promise.all(promiseArr).then(res => {
       return LogWorks.logs.show(log.get('url'));
     }).then(log => {
-      var promiseArr = log.get('entries').map(entryid => {
+      var promiseArr = log.toJS().entries.map(entryid => {
         return LogWorks.entries.show(log.get('id'), entryid).then(entry => {
           if (entry.get('data') != "foo") {
             console.log("Somebody didn't get edited");
@@ -114,7 +115,7 @@ var testEditEntries = function(log) {
 
 var testDeleteEntries = function(log) {
   return new Promise((resolve, reject) => {
-    var promiseArr = log.get('entries').map(entryid => LogWorks.entries.del(log.get('id'), entryid));
+    var promiseArr = log.toJS().entries.map(entryid => LogWorks.entries.del(log.get('id'), entryid));
     Promise.all(promiseArr).then(res => {
       return LogWorks.logs.show(log.get('url'));
     }).then(log => {
@@ -141,15 +142,17 @@ var testDeleteLog = function(log) {
   });
 }
 
-var startTest = function () {
+var startTest = function() {
+	var log = {};
   var logsize = randomLogSize();
-  testCreateLog().then(testEditLog).then(testGenerateSignedURL).then(log => {
-    return testAddEntries(log, logsize);
+  testCreateLog().then(testEditLog).then(testGenerateSignedURL).then(createdLog => {
+		log = createdLog;
+    return testAddEntries(createdLog, logsize);
   }).then(testEditEntries).then(testDeleteEntries).then(testDeleteLog).then(log => {
     console.log("WORKS for log size: "+logsize+" (logid: "+log.get('id')+")");
   }).catch(err => {
-    console.log("FAILED for log size: "+logsize+" (logid: "+log.get('id')+")");
+    console.log("FAILED for log size: "+logsize+" (logid: "+log.get('id')+") Error: "+err);
   });
 }
 
-setInterval(function(){startTest();}, 1000);
+setInterval(startTest, 1000);
