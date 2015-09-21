@@ -7,7 +7,7 @@
     "babel": "^5.4.7",
     "bluebird": "^2.9.34",
     "immutable": "^3.7.3",
-    "logworks": "^3.0.28",
+    "logworks": "^4.0.0",
     "lorem-ipsum": "^1.0.3",
     "node-fetch": "^1.3.2"
   },
