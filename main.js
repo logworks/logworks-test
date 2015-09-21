@@ -1,9 +1,10 @@
+let crypto = require('crypto');
 let fetch = require('node-fetch');
 let base64url = require('base64-url');
 let Promise = require('bluebird');
 let API = require('logworks');
 let baseApiUrl = process.env.API_URL || "https://2p0tufq4kg.execute-api.us-east-1.amazonaws.com";
-let apiUrl = baseApiUrl + "/v1";
+let apiUrl = baseApiUrl + "/v2";
 let LogWorks = new API(apiUrl, fetch, Promise);
 let maxLogSize = process.env.MAX_LOG_SIZE || 10;
 
@@ -20,8 +21,9 @@ function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
-function testGetToken(label) {
-  return LogWorks.generateToken(label).then((token) => {
+function testGenerateToken(label) {
+  return LogWorks.generateToken(label).then((immutableToken) => {
+    let token = immutableToken.toJS();
     if (!token.id || !token.secret) {
       console.log("Token wasn't generated");
       Promise.reject();
@@ -152,7 +154,7 @@ function startTest() {
   }).then((log) => {
     logid = log.get('id');
     return testEditLog(label, token, log);
-  }).then(log => testGenerateSignedURL(label, token, log)
+  }).then(log => testGenerateSignedURL(label, token, log))
     .then(log => testAddEntries(label, token, log, logsize))
     .then(log => testEditEntries(label, token, log))
     .then(log => testDeleteEntries(label, token, log))
