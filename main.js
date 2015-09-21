@@ -48,7 +48,7 @@ function testEditLog(label, token, log) {
   var data = log.get('data').toJS();
   data.title = randomString();
   data.description = randomString();
-  return LogWorks.logs.edit(label, token, log.get('id'),data).then(() => {
+  return LogWorks.logs.edit(label, token, log.get('id'), data).then(() => {
     return LogWorks.logs.show(log.get('url'));
   }).then((updatedLog) => {
     let updatedData = updatedLog.get('data').toJS();
@@ -63,7 +63,7 @@ function testEditLog(label, token, log) {
 function testGenerateSignedURL(label, token, log) {
   return LogWorks.logs.generateSignedURL(label, token, log.get('id')).then((response) => {
     let resObj = response.toJS();
-    if ((resObj.success !== 'true') || (!resObj.url)) {
+    if ((resObj.success !== 'true') || (!resObj.signedURL) || (!resObj.key)) {
       console.log("Couldn't generate signed url");
       Promise.reject();
     }
