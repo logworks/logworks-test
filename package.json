@@ -8,7 +8,7 @@
     "base64-url": "^1.2.1",
     "bluebird": "^2.9.34",
     "immutable": "^3.7.3",
-    "logworks": "^4.0.2",
+    "logworks": "^4.0.4",
     "lorem-ipsum": "^1.0.3",
     "node-fetch": "^1.3.2"
   },
