@@ -21,8 +21,8 @@ function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
-function testGenerateToken(label) {
-  return LogWorks.generateToken(label).then((immutableToken) => {
+function testGenerateToken(label, secret) {
+  return LogWorks.generateToken(label, {secret: secret}).then((immutableToken) => {
     let token = immutableToken.toJS();
     if (!token.id || !token.secret) {
       console.log("Token wasn't generated");
@@ -148,7 +148,8 @@ function startTest() {
   var token = '';
   let logsize = randomLogSize();
   let label = randomString();
-  testGenerateToken(label).then((t) => {
+  let secret = randomString();
+  testGenerateToken(label, secret).then((t) => {
     token = t;
     return testCreateLog(label, token);
   }).then((log) => {
